@@ -11,15 +11,20 @@ version = "0.1.0"
 python = "3.11.*"
 zeroc-ice = ">=3.6.5,<3.7"
 jupyter = ">=1.1.1,<2"
+micro_sam = ">=1.6.2,<2"
 
 [pypi-dependencies]
-ngff-zarr = ">=0.20.0, <0.21"
+ngff-zarr = { version = ">=0.20.0, <0.21", extras = ["validate"] }
 omero-py = "==5.21.3"
 ezomero = ">=1.1.1, <2"
 bioio = ">=3.0.0, <4"
 bioio-ome-tiff = ">=1.4.0, <2"
 bioio-imageio = ">=1.3.0, <2"
 dotenv = ">=0.9.9, <0.10"
-napari = ">=0.6.5, <0.7"
-napari-omero = ">=0.5.1, <0.6"
 matplotlib = ">=3.10.7, <4"
+tifffile = ">=2025.10.16, <2026"
+ome-zarr = ">=0.12.2, <0.13"
+napari-ome-zarr = ">=0.6.1, <0.7"
+napari = { version = "*", extras = ["all"] }
+napari-omero = { git = "https://github.com/anwai98/napari-omero" , rev = "add-collections-pipeline"}
+biohack_utils = { path = ".", editable = true }
