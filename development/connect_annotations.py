@@ -180,6 +180,7 @@ def load_omero_labels_in_napari(conn, image_id):
 
 def main():
     parser = omero_credential_parser()
+    parser.add_argument("--delete", action="store_true")  # Deletes the existing metadata.
     args = parser.parse_args()
 
     conn = connect_to_omero(args)
@@ -189,15 +190,17 @@ def main():
     # Scripts to drop metadata.
     raw_id = 35394  # The available LIVECell image on the OMERO server.
     label_id = 35395  # The corresponding labels image for LIVECell on the OMERO server.
+
+    if args.delete:
+        delete_annotations(conn, raw_id)
+        delete_annotations(conn, label_id)
+
     collection_id = connect_annotations(conn, raw_id, args)
     connect_annotations(conn, label_id, args, collection_id=collection_id)
 
     # Read information for the current image id.
     read_information(conn, raw_id, args)
     read_information(conn, label_id, args)
-
-    # delete_annotations(conn, raw_id)
-    # delete_annotations(conn, label_id)
 
     load_omero_labels_in_napari(conn, raw_id)
 
