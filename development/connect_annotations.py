@@ -1,6 +1,6 @@
+import numpy as np
 import imageio.v3 as imageio
 
-from omero.sys import ParametersI
 from omero.gateway import MapAnnotationWrapper
 
 from omero_utils import omero_credential_parser, connect_to_omero
@@ -81,8 +81,8 @@ def read_information(conn, image_id, args):
 
 
 def delete_annotations(conn, image_id):
-    ns = "ome/collection/"
-    # ns = "ome/collection/nodes"
+    # ns = "ome/collection/"
+    ns = "ome/collection/nodes"
     image = conn.getObject("Image", image_id)
 
     anns = list(image.listAnnotations(ns=ns))
@@ -126,22 +126,27 @@ def _find_images_with_collection_id_in_dataset(conn, namespace, collection_id, d
     return images
 
 
+def _omero_image_to_2d_array(img, z=0, c=0, t=0):
+    pixels = img.getPrimaryPixels()
+    plane = pixels.getPlane(z, c, t)
+    return np.asarray(plane)
+
+
 def load_omero_labels_in_napari(conn, image_id):
     # NOTE: namespace seems like a random entity atm. Is there a convention behind it?
     ns = "ome/collection/nodes"
-    image = conn.getObject("Image", image_id)
+    raw_img = conn.getObject("Image", image_id)
 
-    # HACK: I will assume that there is one collection only and find the "annotation_id" for it
-    anns = list(image.listAnnotations(ns=ns))
+    # HACK: assume exactly one collection annotation on the raw image
+    anns = list(raw_img.listAnnotations(ns=ns))
     assert len(anns) == 1
     annotation_id = anns[0].getId()
     print("Raw image collection annotation_id:", annotation_id)
 
-    # Get the dataset of this image to limit the search
-    dataset = image.getParent()
+    # HACK: Search only within the same dataset
+    dataset = raw_img.getParent()
     if dataset is None:
         raise RuntimeError("Image has no parent dataset; adjust search scope.")
-
     dataset_id = dataset.getId()
     print("Searching in dataset", dataset_id)
 
@@ -149,11 +154,28 @@ def load_omero_labels_in_napari(conn, image_id):
         conn, namespace=ns, collection_id=annotation_id, dataset_id=dataset_id,
     )
 
-    # Let's do a simple filtering
+    # Filter out the raw image; what remains should be label images
     label_candidates = [m for m in matches if m[0] != image_id]
     print("Label candidates:", label_candidates)
+    if not label_candidates:
+        raise RuntimeError("No label images found for this collection_id.")
 
-    breakpoint()
+    # For now, pick the first candidate
+    label_img_id, label_name, _ = label_candidates[0]
+    label_img = conn.getObject("Image", label_img_id)
+
+    print(f"Using label image ID={label_img_id}, Name='{label_name}'")
+
+    raw_data = _omero_image_to_2d_array(raw_img, z=0, c=0, t=0)
+    label_data = _omero_image_to_2d_array(label_img, z=0, c=0, t=0)
+
+    # Say hello to napari.
+    import napari
+    viewer = napari.Viewer()
+    viewer.add_image(raw_data, name=raw_img.getName(), blending="additive")
+    viewer.add_labels(label_data, name=label_name)
+
+    napari.run()
 
 
 def main():
@@ -167,17 +189,17 @@ def main():
     # Scripts to drop metadata.
     raw_id = 35394  # The available LIVECell image on the OMERO server.
     label_id = 35395  # The corresponding labels image for LIVECell on the OMERO server.
-    # collection_id = connect_annotations(conn, raw_id, args)
-    # connect_annotations(conn, label_id, args, collection_id=collection_id)
+    collection_id = connect_annotations(conn, raw_id, args)
+    connect_annotations(conn, label_id, args, collection_id=collection_id)
 
     # Read information for the current image id.
-    # read_information(conn, raw_id, args)
-    # read_information(conn, label_id, args)
+    read_information(conn, raw_id, args)
+    read_information(conn, label_id, args)
 
-    delete_annotations(conn, raw_id)
-    delete_annotations(conn, label_id)
+    # delete_annotations(conn, raw_id)
+    # delete_annotations(conn, label_id)
 
-    # load_omero_labels_in_napari(conn, raw_id)
+    load_omero_labels_in_napari(conn, raw_id)
 
     conn.close()
 
