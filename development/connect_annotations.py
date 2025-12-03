@@ -47,6 +47,12 @@ def write_annotations_to_image_and_labels(conn, image_id, label_id):
     # Add node annotation to the label image.
     omero_annotation._add_node_annotation(conn, label_id, "Labels", ann_id, "Cell_Segmentation")
 
+    # Finally, let's build a pseudo-network by linking all links.
+    all_image_ids = image_id + [label_id]
+    for iid in all_image_ids:
+        link = omero_annotation._build_image_url(iid)
+        omero_annotation._append_link_to_node_annotation(conn, iid, link)
+
 
 def main():
     parser = omero_credential_parser()
@@ -57,8 +63,8 @@ def main():
     # Scripts to drop metadata.
 
     # 1. For LIVECell (2d)
-    # raw_id = 35394  # The available LIVECell image on the OMERO server.
-    # label_id = 35395  # The corresponding labels image for LIVECell on the OMERO server.
+    raw_id = 35394  # The available LIVECell image on the OMERO server.
+    label_id = 35395  # The corresponding labels image for LIVECell on the OMERO server.
 
     # 2. For CochleaNet (3d)
     # raw_id = 35499
@@ -68,8 +74,8 @@ def main():
     # raw_id = 35478
 
     # 4. For CovidIF HCS data (2d)
-    raw_id = [35501, 35502]
-    label_id = 35503
+    # raw_id = [35501, 35502]
+    # label_id = 35503
 
     # Writes annotations in expected format.
     # write_annotations_to_image_and_labels(conn, raw_id, label_id)

@@ -1,3 +1,5 @@
+import json
+
 import numpy as np
 
 from omero.rtypes import rstring
@@ -6,6 +8,59 @@ from omero.model import MapAnnotationI, NamedValue
 
 NS_COLLECTION = "ome/collection"
 NS_NODE = "ome/collection/nodes"
+
+
+def _build_image_url(image_id):
+    """Return a relative OMERO.web URL for this image."""
+    return f"https://omero-training.gerbi-gmb.de/webclient/img_detail/{image_id}/"
+
+
+def _append_link_to_node_annotation(conn, image_id, link):
+    """Append `link` to the 'attributes.link' field of the first NS_NODE
+    map annotation of the given image.
+    """
+    img = conn.getObject("Image", image_id)
+    if img is None:
+        raise ValueError(f"Image {image_id} not found")
+
+    anns = list(img.listAnnotations(ns=NS_NODE))
+    if not anns:
+        raise RuntimeError(
+            f"No node annotation (ns={NS_NODE}) found for Image {image_id}"
+        )
+
+    node_ann = anns[0]  # you seem to expect exactly one node per image
+
+    # Current key–value dict for this annotation
+    kv = _map_ann_to_dict(node_ann)
+
+    # Read existing links from "attributes.link" (JSON list or simple string)
+    raw_links = kv.get("attributes.link")
+    if raw_links is None:
+        links = []
+    else:
+        links = json.loads(raw_links)
+        if not isinstance(links, list):
+            links = [str(links)]
+
+    # Append if not already present
+    if link not in links:
+        links.append(link)
+
+    # Store back as JSON string
+    kv["attributes.link"] = json.dumps(links)
+
+    # Convert back to list of NamedValue
+    kv_pairs = [NamedValue(str(k), str(v)) for k, v in kv.items()]
+
+    # Get the underlying IObject to update
+    qs = conn.getQueryService()
+    iann = qs.get("MapAnnotation", node_ann.getId())
+
+    iann.setMapValue(kv_pairs)
+
+    update_service = conn.getUpdateService()
+    update_service.saveObject(iann)
 
 
 def _map_ann_to_dict(ann):
@@ -283,7 +338,10 @@ def fetch_omero_labels_in_napari(
             node_name = node_info.get("name") or f"image_{mid}"
             print(f"Found label image: ID={mid}, node_name='{node_name}'")
 
-            label_array = _omero_image_to_array(img, z=None if is_3d else 0, c=0, t=0)
+            from napari_omero.plugins.loaders import get_data_lazy
+            label_array = get_data_lazy(img)
+
+            # label_array = _omero_image_to_array(img, z=None if is_3d else 0, c=0, t=0)
             labels_dict[node_name] = label_array
 
     if not labels_dict:
