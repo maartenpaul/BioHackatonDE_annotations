@@ -2,10 +2,10 @@ from biohack_utils.util import omero_credential_parser, connect_to_omero
 from biohack_utils import omero_annotation
 
 
-def load_omero_labels_in_napari(conn, image_id):
+def load_omero_labels_in_napari(conn, image_id, is_3d=False):
     from biohack_utils.omero_annotation import fetch_omero_labels_in_napari
 
-    raw_data, label_dict = fetch_omero_labels_in_napari(conn, image_id, return_raw=True)
+    raw_data, label_dict = fetch_omero_labels_in_napari(conn, image_id, return_raw=True, is_3d=is_3d)
 
     # Say hello to napari.
     import napari
@@ -40,17 +40,23 @@ def main():
     conn = connect_to_omero(args)
 
     # Scripts to drop metadata.
-    raw_id = 35394  # The available LIVECell image on the OMERO server.
-    label_id = 35395  # The corresponding labels image for LIVECell on the OMERO server.
 
-    # TODO: Check Martin's volume.
-    # raw_id = 35494
+    # 1. For LIVECell (2d)
+    # raw_id = 35394  # The available LIVECell image on the OMERO server.
+    # label_id = 35395  # The corresponding labels image for LIVECell on the OMERO server.
+
+    # 2. For CochleaNet (3d)
+    # raw_id = 35499
+    # label_id = 35500
+
+    # 3. For multi-label images (2d)
+    raw_id = 35478
 
     # Writes annotations in expected format.
     # write_annotations_to_image_and_labels(conn, raw_id, label_id)
 
     # Loading existing stuff.
-    load_omero_labels_in_napari(conn, raw_id)
+    load_omero_labels_in_napari(conn, raw_id, is_3d=False)
 
     conn.close()
 
