@@ -2,7 +2,7 @@ import imageio.v3 as imageio
 
 from omero.gateway import MapAnnotationWrapper
 
-from omero_utils import omero_credential_parser, connect_to_omero
+from biohack_utils.util import omero_credential_parser, connect_to_omero
 
 
 def upload_livecell(conn, args):
@@ -79,25 +79,8 @@ def read_information(conn, image_id, args):
         print(kv_dict)
 
 
-def delete_annotations(conn, image_id):
-    # ns = "ome/collection/"
-    ns = "ome/collection/nodes"
-    image = conn.getObject("Image", image_id)
-
-    anns = list(image.listAnnotations(ns=ns))
-
-    fanns = []
-    for ann in anns:
-        kv_dict = {k: v for k, v in ann.getValue()}
-        print("Annotation ID:", ann.getId())
-        print(kv_dict)
-        fanns.append(ann.getId())
-
-    conn.deleteObjects("Annotation", fanns, wait=True)
-
-
 def load_omero_labels_in_napari(conn, image_id):
-    from biohack_utils.util import fetch_omero_labels_in_napari
+    from biohack_utils.omero_annotation import fetch_omero_labels_in_napari
 
     raw_data, label_data = fetch_omero_labels_in_napari(conn, image_id, return_raw=True)
 
@@ -111,7 +94,6 @@ def load_omero_labels_in_napari(conn, image_id):
 
 def main():
     parser = omero_credential_parser()
-    parser.add_argument("--delete", action="store_true")  # Deletes the existing metadata.
     args = parser.parse_args()
 
     conn = connect_to_omero(args)
@@ -122,9 +104,8 @@ def main():
     raw_id = 35394  # The available LIVECell image on the OMERO server.
     label_id = 35395  # The corresponding labels image for LIVECell on the OMERO server.
 
-    if args.delete:
-        delete_annotations(conn, raw_id)
-        delete_annotations(conn, label_id)
+    # TODO: Check Martin's volume.
+    # raw_id = 35494
 
     # collection_id = connect_annotations(conn, raw_id, args)
     # connect_annotations(conn, label_id, args, collection_id=collection_id)

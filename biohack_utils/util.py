@@ -1,4 +1,7 @@
+import argparse
 import numpy as np
+
+from omero.gateway import BlitzGateway
 
 
 def _find_images_with_collection_id_in_dataset(conn, namespace, collection_id, dataset_id, limit=None):
@@ -77,3 +80,30 @@ def fetch_omero_labels_in_napari(conn, image_id, return_raw=False):
         return raw_data, label_data
     else:
         return label_data
+
+
+def connect_to_omero(args):
+    USERNAME = args.username
+    PASSWORD = args.password
+    HOST = "omero-training.gerbi-gmb.de"
+    PORT = 4064  # Default OMERO port
+
+    conn = BlitzGateway(USERNAME, PASSWORD, host=HOST, port=PORT)
+    conn.connect()
+
+    if conn.isConnected():
+        print("Connected to OMERO")
+    else:
+        print("Failed to connect")
+        exit(1)
+
+    return conn
+
+
+def omero_credential_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-u", "--username", type=str, required=True)
+    parser.add_argument("-p", "--password", type=str, required=True)
+    parser.add_argument("--image_id", type=int, required=True)
+    parser.add_argument("--namespace", type=str, default="ome/collection")
+    return parser
