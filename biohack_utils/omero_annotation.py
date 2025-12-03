@@ -59,7 +59,7 @@ def _create_map_annotation(conn, kv, namespace):
 
     update_service = conn.getUpdateService()
     saved = update_service.saveAndReturnObject(ann)
-    return saved
+    return conn.getObject("MapAnnotation", saved.getId().getValue())
 
 
 def _add_node_annotation(
@@ -84,7 +84,7 @@ def _add_node_annotation(
 
     ann = _create_map_annotation(conn, kv, NS_NODE)
     image.linkAnnotation(ann)
-    return ann.getId().getValue()
+    return ann.getId()
 
 
 def _get_collection_members(conn, collection_ann_id):

@@ -104,6 +104,6 @@ def omero_credential_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("-u", "--username", type=str, required=True)
     parser.add_argument("-p", "--password", type=str, required=True)
-    parser.add_argument("--image_id", type=int, required=True)
+    parser.add_argument("--image_id", type=int)
     parser.add_argument("--namespace", type=str, default="ome/collection")
     return parser
