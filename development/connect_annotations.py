@@ -5,13 +5,14 @@ from biohack_utils import omero_annotation
 def load_omero_labels_in_napari(conn, image_id):
     from biohack_utils.omero_annotation import fetch_omero_labels_in_napari
 
-    raw_data, label_data = fetch_omero_labels_in_napari(conn, image_id, return_raw=True)
+    raw_data, label_dict = fetch_omero_labels_in_napari(conn, image_id, return_raw=True)
 
     # Say hello to napari.
     import napari
-    viewer = napari.Viewer()
-    viewer.add_image(raw_data, blending="additive")
-    viewer.add_labels(label_data)
+    v = napari.Viewer()
+    v.add_image(raw_data, blending="additive")
+    for key, val in label_dict.items():
+        v.add_labels(val, name=key)
     napari.run()
 
 
@@ -45,10 +46,11 @@ def main():
     # TODO: Check Martin's volume.
     # raw_id = 35494
 
-    write_annotations_to_image_and_labels(conn, raw_id, label_id)
+    # Writes annotations in expected format.
+    # write_annotations_to_image_and_labels(conn, raw_id, label_id)
 
     # Loading existing stuff.
-    # load_omero_labels_in_napari(conn, raw_id)
+    load_omero_labels_in_napari(conn, raw_id)
 
     conn.close()
 

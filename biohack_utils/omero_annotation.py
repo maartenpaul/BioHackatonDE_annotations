@@ -229,7 +229,7 @@ def _find_images_with_collection_id_in_dataset(
     return images
 
 
-def fetch_omero_labels_in_napari(conn, image_id, return_raw=False, label_node_type="label"):
+def fetch_omero_labels_in_napari(conn, image_id, return_raw=False, label_node_type="Labels"):
     """Fetch label data for a given raw image using collections/nodes.
 
     Returns the raw and label array data.
@@ -242,45 +242,45 @@ def fetch_omero_labels_in_napari(conn, image_id, return_raw=False, label_node_ty
     if not collections:
         raise RuntimeError("Image is not part of any collection (namespace NS_COLLECTION).")
 
-    breakpoint()
+    labels_dict = {}
 
-    # For now, use the first collection
-    coll = collections[0]
-    collection_ann_id = coll["collection_id"]
-    print("Raw image collection annotation_id:", collection_ann_id)
+    # Go through ALL collections this image is in
+    for coll in collections:
+        coll_id = coll["collection_id"]
+        print(f"Processing collection {coll_id} (name={coll.get('name')})")
 
-    # Restrict search to the same dataset (as in your original code)
-    dataset = raw_img.getParent()
-    if dataset is None:
-        raise RuntimeError("Image has no parent dataset; adjust search scope.")
-    dataset_id = dataset.getId()
-    print("Searching in dataset", dataset_id)
+        for member in coll["members"]:
+            mid = member["image_id"]
+            node_info = member["nodes"] or {}
 
-    matches = _find_images_with_collection_id_in_dataset(
-        conn,
-        namespace=NS_NODE,           # not used internally; kept for signature
-        collection_id=collection_ann_id,
-        dataset_id=dataset_id,
-        node_type=label_node_type,
-        limit=None,
-    )
+            # Skip the raw image itself
+            if mid == image_id:
+                continue
 
-    # Filter out the raw image; remaining should be label images
-    label_candidates = [m for m in matches if m[0] != image_id]
-    print("Label candidates:", label_candidates)
-    if not label_candidates:
-        raise RuntimeError("No label images found for this collection in the current dataset.")
+            # Filter by node type, e.g. "Labels"
+            if label_node_type is not None and node_info.get("type") != label_node_type:
+                continue
 
-    # Pick the first candidate
-    label_img_id, label_name, _ = label_candidates[0]
-    label_img = conn.getObject("Image", label_img_id)
+            img = conn.getObject("Image", mid)
+            if img is None:
+                continue
 
-    print(f"Using label image ID={label_img_id}, Name='{label_name}'")
+            # Use node "name" as key; fall back to image id
+            node_name = node_info.get("name") or f"image_{mid}"
+            print(f"Found label image: ID={mid}, node_name='{node_name}'")
+
+            label_array = _omero_image_to_2d_array(img, z=0, c=0, t=0)
+            labels_dict[node_name] = label_array
+
+    if not labels_dict:
+        raise RuntimeError(
+            "No label images with the requested node_type found "
+            "in any collection for this raw image."
+        )
 
     raw_data = _omero_image_to_2d_array(raw_img, z=0, c=0, t=0)
-    label_data = _omero_image_to_2d_array(label_img, z=0, c=0, t=0)
 
     if return_raw:
-        return raw_data, label_data
+        return raw_data, labels_dict
     else:
-        return label_data
+        return labels_dict
