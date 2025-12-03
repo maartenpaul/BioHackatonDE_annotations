@@ -11,7 +11,3 @@ __pycache__/
 
 # Example images
 samples/*
-
-# Python cache
-__pycache__/
-*egg-info/
