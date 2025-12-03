@@ -6,7 +6,8 @@ setup(
     packages=find_packages(include=['biohack_utils', 'biohack_utils.*']),
     entry_points={
         "console_scripts": [
-            "biohack_utils.delete_anns = biohack_utils.delete_annotations:main",
+            "biohack_utils.delete_annotations = biohack_utils.delete_stuff:delete_annotations",
+            "biohack_utils.delete_images = biohack_utils.delete_stuff:delete_images"
         ]
     }
 )
