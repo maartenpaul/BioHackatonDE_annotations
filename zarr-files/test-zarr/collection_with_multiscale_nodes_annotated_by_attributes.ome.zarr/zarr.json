@@ -1,0 +1,33 @@
+{
+  "attributes": {
+    "ome": {
+      "version": "0.x",
+      "type": "collection",
+      "name": "sample",
+      "nodes": [
+        {
+          "name": "original",
+          "type": "multiscale",
+          "path": "./original",
+          "attributes": {
+            "ome-iviewer:settings": {
+              "isDisabled": false
+            },
+            "ome-iviewer:voxelType": "intensity"
+          }
+        },
+        {
+          "name": "labels",
+          "type": "multiscale",
+          "path": "./labels",
+          "attributes": {
+            "ome-iviewer:voxelType": "labels"
+          }
+        }
+      ],
+      "attributes": {}
+    }
+  },
+  "zarr_format": 3,
+  "node_type": "group"
+}

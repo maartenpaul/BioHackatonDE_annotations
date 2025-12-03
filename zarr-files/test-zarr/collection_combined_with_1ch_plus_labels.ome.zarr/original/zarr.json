@@ -1,0 +1,101 @@
+{
+  "attributes": {
+    "ome": {
+      "version": "0.5",
+      "multiscales": [
+        {
+          "datasets": [
+            {
+              "path": "0",
+              "coordinateTransformations": [
+                {
+                  "type": "scale",
+                  "scale": [
+                    1.0,
+                    1.0
+                  ]
+                }
+              ]
+            },
+            {
+              "path": "1",
+              "coordinateTransformations": [
+                {
+                  "type": "scale",
+                  "scale": [
+                    2.0,
+                    2.0
+                  ]
+                }
+              ]
+            },
+            {
+              "path": "2",
+              "coordinateTransformations": [
+                {
+                  "type": "scale",
+                  "scale": [
+                    4.0,
+                    4.0
+                  ]
+                }
+              ]
+            },
+            {
+              "path": "3",
+              "coordinateTransformations": [
+                {
+                  "type": "scale",
+                  "scale": [
+                    8.0,
+                    8.0
+                  ]
+                }
+              ]
+            },
+            {
+              "path": "4",
+              "coordinateTransformations": [
+                {
+                  "type": "scale",
+                  "scale": [
+                    16.25,
+                    16.0
+                  ]
+                }
+              ]
+            }
+          ],
+          "name": "/original",
+          "axes": [
+            {
+              "name": "y",
+              "type": "space"
+            },
+            {
+              "name": "x",
+              "type": "space"
+            }
+          ]
+        }
+      ],
+      "omero": {
+        "channels": [
+          {
+            "color": "FFFFFF",
+            "window": {
+              "start": 9,
+              "end": 243,
+              "min": 9,
+              "max": 243
+            },
+            "label": "original",
+            "active": true
+          }
+        ]
+      }
+    }
+  },
+  "zarr_format": 3,
+  "node_type": "group"
+}
