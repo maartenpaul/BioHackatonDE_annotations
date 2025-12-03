@@ -1,7 +1,5 @@
 import json
 
-import numpy as np
-
 from omero.rtypes import rstring
 from omero.model import MapAnnotationI, NamedValue
 
@@ -145,6 +143,7 @@ def _add_node_annotation(
     image.linkAnnotation(ann)
     return ann.getId()
 
+
 def _get_collection_members(conn, collection_ann_id):
     """Get all images linked to a collection annotation.
     """
@@ -224,12 +223,6 @@ def _find_related_images(conn, image_id, node_type=None):
                 })
 
     return related
-
-
-def _omero_image_to_2d_array(img, z=0, c=0, t=0):
-    pixels = img.getPrimaryPixels()
-    plane = pixels.getPlane(z, c, t)
-    return np.asarray(plane)
 
 
 def _find_images_with_collection_id_in_dataset(
@@ -335,7 +328,7 @@ def fetch_omero_labels_in_napari(conn, image_id, return_raw=False, label_node_ty
     if not labels_dict:
         return labels_dict
 
-    raw_data = _omero_image_to_2d_array(raw_img, z=0, c=0, t=0)
+    raw_data = get_data_lazy(raw_img)
 
     if return_raw:
         return raw_data, labels_dict
