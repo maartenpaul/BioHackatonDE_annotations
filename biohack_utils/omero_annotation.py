@@ -287,10 +287,7 @@ def fetch_omero_labels_in_napari(
             labels_dict[node_name] = label_array
 
     if not labels_dict:
-        raise RuntimeError(
-            "No label images with the requested node_type found "
-            "in any collection for this raw image."
-        )
+        return labels_dict
 
     raw_data = _omero_image_to_array(raw_img, z=None if is_3d else 0, c=0, t=0)
 

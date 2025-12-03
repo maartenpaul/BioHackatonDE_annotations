@@ -3,6 +3,7 @@ from biohack_utils import omero_annotation
 
 
 def load_omero_labels_in_napari(conn, image_id, is_3d=False):
+    id_was_a_list = isinstance(image_id, list)
     if isinstance(image_id, list):  # If it's a list, only check one image.
         image_id = image_id[0]
 
@@ -12,7 +13,7 @@ def load_omero_labels_in_napari(conn, image_id, is_3d=False):
         conn, image_id, return_raw=True, is_3d=is_3d, label_node_type="Labels"
     )
 
-    if isinstance(image_id, list):
+    if id_was_a_list:
         # Well the assumption is there are multiple images. So, gotta catch them all.
         ldict = fetch_omero_labels_in_napari(
             conn, image_id, return_raw=False, is_3d=is_3d, label_node_type="Intensities"
@@ -24,10 +25,7 @@ def load_omero_labels_in_napari(conn, image_id, is_3d=False):
     v = napari.Viewer()
     v.add_image(raw_data, blending="additive")
     for key, val in label_dict.items():
-        if val.dtype == float:  # for image data.
-            v.add_image(val, name=key)
-        else:  # for label data.
-            v.add_labels(val, name=key)
+        v.add_image(val, name=key)
     napari.run()
 
 
