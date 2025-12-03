@@ -70,8 +70,7 @@ def _add_node_annotation(
     """
     kv = {
         "type": node_type,
-        "collection_id": str(collection_ann_id)
-        
+        "collection_id": str(collection_ann_id),
     }
     if node_name:
         kv["name"] = node_name
@@ -87,6 +86,9 @@ def _add_node_annotation(
     image.linkAnnotation(ann)
     return ann.getId()
 
+    ann = _create_map_annotation(conn, kv, NS_NODE)
+    image.linkAnnotation(ann)
+    return ann.getId()
 
 def _get_collection_members(conn, collection_ann_id):
     """Get all images linked to a collection annotation.

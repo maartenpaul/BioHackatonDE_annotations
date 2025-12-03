@@ -40,8 +40,6 @@ def main():
     conn = connect_to_omero(args)
 
     # Scripts to drop metadata.
-    raw_id = 35394  # The available LIVECell image on the OMERO server.
-    label_id = 35395  # The corresponding labels image for LIVECell on the OMERO server.
 
     # TODO: Check Martin's volume.
     # raw_id = 35494
