@@ -1,0 +1,48 @@
+{
+    "ome/collection": {
+        "version": "0.0.1",
+        "type": "collection",
+        "name": "cell"
+    },
+    "ome/collection/nodes": {
+        "35515": {
+            "category": "Intensities",
+            "origin": "Raw",
+            "name": "human_cells a",
+            "description": "Human HT29 from Moffat et al. doi: 10.1016/j.cell.2006.01.040"
+        },
+        "35507": {
+            "category": "Annotations",
+            "origin": "Masks",
+            "name": "micro-sam a",
+            "description": "Automatic micro-sam segmentation",
+            "source_image_id": 35515
+        },
+        "35514": {
+            "category": "Intensities",
+            "origin": "Raw",
+            "name": "human_cells b",
+            "description": "Human HT29 from Moffat et al. doi: 10.1016/j.cell.2006.01.040"
+        },
+        "35508": {
+            "category": "Annotations",
+            "origin": "Masks",
+            "name": "micro-sam b",
+            "description": "Automatic micro-sam segmentation",
+            "source_image_id": 35514
+        },
+        "35513": {
+            "category": "Intensities",
+            "origin": "Raw",
+            "name": "human_cells c",
+            "description": "Human HT29 from Moffat et al. doi: 10.1016/j.cell.2006.01.040"
+        },
+        "35509": {
+            "category": "Annotations",
+            "origin": "Masks",
+            "name": "micro-sam c",
+            "description": "Automatic micro-sam segmentation",
+            "source_image_id": 35513
+        }
+    }
+}

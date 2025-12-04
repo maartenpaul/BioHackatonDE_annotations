@@ -86,6 +86,20 @@ def _create_collection(conn, name, version="0.x"):
     return saved.getId().getValue()
 
 
+def _create_collection_from_dict(conn, json_dict):
+    map_annotation = MapAnnotationI()
+    map_annotation.setNs(rstring(NS_COLLECTION))
+
+    kv_pairs = [NamedValue(key, value) for (key, value) in json_dict.items()]
+    map_annotation.setMapValue(kv_pairs)
+
+    # We save this in a server.
+    update_service = conn.getUpdateService()
+    saved = update_service.saveAndReturnObject(map_annotation)
+
+    return saved.getId().getValue()
+
+
 def _link_collection_to_image(conn, collection_ann_id, image_id):
     """Link an existing collection annotation to an image.
     """
@@ -97,7 +111,12 @@ def _link_collection_to_image(conn, collection_ann_id, image_id):
     if annotation is None:
         raise ValueError("Annotation {} not found".format(collection_ann_id))
 
-    image.linkAnnotation(annotation)
+    # Check if image is already linked to collection
+    ann_ids = [annotation.getId() for annotation in image.listAnnotations()]
+    if collection_ann_id in ann_ids:
+        print("Collection ID is already linked to image.")
+    else:
+        image.linkAnnotation(annotation)
 
 
 def _create_map_annotation(conn, kv, namespace):
@@ -138,6 +157,33 @@ def _add_node_annotation(
     ann = _create_map_annotation(conn, kv, NS_NODE)
     image.linkAnnotation(ann)
     return ann.getId()
+
+
+def _add_node_annotation_from_dict(
+    conn, image_id, collection_id, node_dict
+):
+    """Add a node annotation to an image describing its role in the collection.
+    Returns the created annotation id.
+    """
+    kv = {"collection_id": str(collection_id)}
+    for (key, value) in node_dict.items():
+        if key == "attributes":
+            for (a_key, a_val) in node_dict["attributes"]:
+                kv[f"attributes.{a_key}"] = a_val
+        else:
+            kv[key] = value
+
+    image = conn.getObject("Image", image_id)
+    if image is None:
+        raise ValueError(f"Image {image_id} not found")
+
+    # Check if collection id already exists within MapAnnotations
+    for annotation in image.listAnnotations():
+        kvpairs = annotation.getMapValue()
+        for kv in kvpairs:
+            if kv.name == "collection_id" and kv.value == str(collection_id):
+                print(f"Node annotation already exists for image id {image_id}.")
+                return annotation.getId()
 
     ann = _create_map_annotation(conn, kv, NS_NODE)
     image.linkAnnotation(ann)
