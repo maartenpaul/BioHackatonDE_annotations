@@ -1,10 +1,8 @@
-from biohack_utils.ConfigSchema import OMECollection, OMEWrapper, CollectionNode, NodeAttributes, MultiscaleNode, NS_COLLECTION, NS_NODE
+from biohack_utils.ConfigSchema import OMECollection, OMEWrapper, CollectionNode, NodeAttributes, MultiscaleNode
 from omero.rtypes import rstring
 from omero.model import MapAnnotationI, NamedValue
-from biohack_utils.ConfigSchema import OMECollection, OMEWrapper, CollectionNode, NodeAttributes, MultiscaleNode, NS_COLLECTION, NS_NODE
 import omero.sys
 from biohack_utils.omero_annotation import _create_collection, _link_collection_to_image, _add_node_annotation, _build_image_url, _append_link_to_node_annotation 
-
 
 NS_COLLECTION = "ome/collection"
 NS_NODE = "ome/collection/nodes"
@@ -20,6 +18,7 @@ def flatten(wrapper: OMEWrapper) -> list[dict]:
             if isinstance(node, CollectionNode):
                 traverse(node.nodes, path)
             else:
+                record = {'name' : node.name}
                 record = {'path': path}
                 record.update(node.attributes.model_dump(by_alias=True, exclude_none=True))
                 result.append(record)
