@@ -3,7 +3,7 @@ import imageio.v3 as imageio
 
 from skimage.measure import label
 
-from biohack_utils.util import connect_to_omero
+from biohack_utils.util import connect_to_omero, _upload_image, _upload_volume
 
 
 def upload_data(conn, fpath, name, labels=False):
@@ -17,32 +17,18 @@ def upload_data(conn, fpath, name, labels=False):
     """
     arr = imageio.imread(fpath)
     if labels:
-        arr = label(labels).astype("uint16")
+        arr = label(arr).astype("uint16")
 
-    def _upload_image(curr, iname):
-        images = [curr]
-        image = conn.createImageFromNumpySeq(
-            (im for im in images),
-            imageName=iname,
-        )
-        print(f"Created image with ID: {image.id}")
+    if len(arr.shape) == 2:
+        img_id = _upload_image(conn, arr, name)
 
-    def _upload_volume(curr, iname):
-        # Upload the image and corresponding labels
-        im = conn.createImageFromNumpySeq(
-            (plane for plane in curr),
-            sizeZ=curr.shape[0],
-            sizeC=1,
-            sizeT=1,
-            imageName=iname,
-        )
-        print(f"Created image with ID: {im.id}")
+    elif len(arr.shape) == 3:
+        img_id = _upload_volume(conn, arr, name)
 
-    if len(arr.shape) == 3:
-        _upload_image(arr, name)
+    else:
+        raise ValueError("Input data must have 2D or 3D shape.")
 
-    if len(arr.shape) == 3:
-        _upload_volume(arr, name)
+    print(f"Created image with ID: {img_id}")
 
 
 def main():
@@ -64,7 +50,7 @@ def main():
     args = parser.parse_args()
 
     conn = connect_to_omero(args)
-    upload_data(conn, args.input, args.description, args.label)
+    upload_data(conn, args.input, args.name, args.label)
 
     conn.close()
 

@@ -4,6 +4,27 @@ import numpy as np
 from omero.gateway import BlitzGateway
 
 
+def _upload_image(conn, curr, iname):
+    images = [curr]
+    image = conn.createImageFromNumpySeq(
+        (im for im in images),
+        imageName=iname,
+    )
+    return image.id
+
+
+def _upload_volume(conn, curr, iname):
+    # Upload the image and corresponding labels
+    image = conn.createImageFromNumpySeq(
+        (plane for plane in curr),
+        sizeZ=curr.shape[0],
+        sizeC=1,
+        sizeT=1,
+        imageName=iname,
+    )
+    return image.id
+
+
 def _find_images_with_collection_id_in_dataset(conn, namespace, collection_id, dataset_id, limit=None):
     dataset = conn.getObject("Dataset", dataset_id)
     if dataset is None:
