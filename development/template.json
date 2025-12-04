@@ -1,0 +1,24 @@
+{
+    "ome/collection": {
+        "version": "0.0.1",
+        "type": "collection",
+        "name": "cell"
+    },
+    "ome/collection/nodes": [
+        {
+            "category": "Intensities",
+            "origin": "Raw / Processed",
+            "collection_id": 12345,
+            "name": "<ONTOLOGY>",
+            "description": "Lorem Ipsum Blossom Pancakes"
+        },
+        {
+            "category": "Annotations",
+            "origin": "Masks / Tracks / Shapes / Points",
+            "collection_id": 12345,
+            "name": "<ONTOLOGY>",
+            "description": "Lorem Ipsum Blossom Cupcapes",
+            "source_image_id": 54321
+        }
+    ]
+}
