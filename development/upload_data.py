@@ -33,7 +33,7 @@ def upload_data(conn, fpath, name, labels=False):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Upload_ ata to Omero web.")
+        description="Upload data to Omero web.")
 
     parser.add_argument("-u", "--username", type=str, required=True)
     parser.add_argument("-p", "--password", type=str, required=True)

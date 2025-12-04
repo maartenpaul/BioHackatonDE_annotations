@@ -1,0 +1,29 @@
+{
+    "ome/collection": {
+        "version": "0.0.1",
+        "type": "collection",
+        "name": "cell"
+    },
+    "ome/collection/nodes": {
+        "<image_id_01>": {
+            "category": "Intensities",
+            "origin": "Raw",
+            "name": "raw image",
+            "description": "Lorem ipsum"
+        },
+        "<image_id_02>": {
+            "category": "Intensities",
+            "origin": "Processed",
+            "name": "processed image",
+            "description": "Lorem ipsum",
+            "source_image_id": ["<image_id_01>"]
+        },
+        "<image_id_03>": {
+            "category": "Annotations",
+            "origin": "Masks",
+            "name": "masks",
+            "description": "Lorem ipsum",
+            "source_image_id": ["<image_id_01>", "<image_id_02>"]
+        }
+    }
+}
