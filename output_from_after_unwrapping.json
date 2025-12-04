@@ -6,42 +6,36 @@
     "nodes": [
       {
         "type": "multiscale",
-        "name": "CovidIF_Cell_Raw",
+        "name": "nuclei_raw",
         "attributes": {
-          "omero_image_id": 35501,
+          "omero_image_id": 35478,
           "category": "intensities",
           "origin": "raw",
           "source": null,
-          "description": "Raw cell image from CovidIF dataset"
+          "description": "Original nuclei channel"
         }
       },
       {
-        "type": "collection",
-        "name": "nucleus_analysis",
-        "nodes": [
-          {
-            "type": "multiscale",
-            "name": "CovidIF_Nucleus_Raw",
-            "attributes": {
-              "omero_image_id": 35502,
-              "category": "intensities",
-              "origin": "raw",
-              "source": null,
-              "description": "Raw nucleus image from CovidIF dataset"
-            }
-          },
-          {
-            "type": "multiscale",
-            "name": "nucleus",
-            "attributes": {
-              "omero_image_id": 35503,
-              "category": "annotations",
-              "origin": "masks",
-              "source": "CovidIF_Nucleus_Raw",
-              "description": "Nucleus segmentation from CovidIF dataset"
-            }
-          }
-        ]
+        "type": "multiscale",
+        "name": "nuclei_segmentation",
+        "attributes": {
+          "omero_image_id": 35485,
+          "category": "annotations",
+          "origin": "masks",
+          "source": "nuclei_raw",
+          "description": "Nuclei segmentation masks"
+        }
+      },
+      {
+        "type": "multiscale",
+        "name": "cell_segmentation",
+        "attributes": {
+          "omero_image_id": 35489,
+          "category": "annotations",
+          "origin": "masks",
+          "source": "nuclei_raw",
+          "description": "Cell segmentation masks"
+        }
       }
     ]
   }
