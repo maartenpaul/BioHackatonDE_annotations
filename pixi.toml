@@ -12,6 +12,7 @@ python = "3.11.*"
 zeroc-ice = ">=3.6.5,<3.7"
 jupyter = ">=1.1.1,<2"
 micro_sam = ">=1.6.2,<2"
+napari = ">=0.6.6,<0.7"
 
 [pypi-dependencies]
 ngff-zarr = { version = ">=0.20.0, <0.21", extras = ["validate"] }
