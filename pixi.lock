@@ -573,7 +573,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/b5/2b/2cca4261bab978eb3d9f1aa32fe7dcd9021e193bdc88b3dcf0bb366e9f91/itkwasm_downsample_wasi-1.8.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/b8/89/ea8f91594bc5dbb879734d35a6f2b0ad50605d7fb419de2b63d4211765cc/lxml-6.0.2-cp311-cp311-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/a8/9f/78f8761c2705d4c6d7516faed63c0ebdac569f6db1bef95e0d5218fdc146/multidict-6.7.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
-      - pypi: git+https://github.com/anwai98/napari-omero?rev=add-collections-pipeline#3aafce4af10a47d512859578593c4a2f075b030c
+      - pypi: git+https://github.com/anwai98/napari-omero?rev=add-collections-pipeline#b9d4f018795cd37294c9d64a23390a2ac2d68c0a
       - pypi: https://files.pythonhosted.org/packages/0d/81/8088d4d695ff7b93af4b1224448ec3270990c37d4e77bdb454c0078384e7/napari_ome_zarr-0.6.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/22/80/e567070f62c1372aae1042c9d6f8a6fb96b52ec6e16858ab06326cd1a613/ngff_zarr-0.20.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/fc/6a/1000cad1700ab0af4d1b1d0a9c23c34badddb4f547c008bde2a6c61968f1/ome_types-0.6.3-py3-none-any.whl
@@ -1066,7 +1066,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/b5/2b/2cca4261bab978eb3d9f1aa32fe7dcd9021e193bdc88b3dcf0bb366e9f91/itkwasm_downsample_wasi-1.8.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/e2/7d/ca6fb13349b473d5732fb0ee3eec8f6c80fc0688e76b7d79c1008481bf1f/lxml-6.0.2-cp311-cp311-win_amd64.whl
       - pypi: https://files.pythonhosted.org/packages/32/0f/13228f26f8b882c34da36efa776c3b7348455ec383bab4a66390e42963ae/multidict-6.7.0-cp311-cp311-win_amd64.whl
-      - pypi: git+https://github.com/anwai98/napari-omero?rev=add-collections-pipeline#3aafce4af10a47d512859578593c4a2f075b030c
+      - pypi: git+https://github.com/anwai98/napari-omero?rev=add-collections-pipeline#b9d4f018795cd37294c9d64a23390a2ac2d68c0a
       - pypi: https://files.pythonhosted.org/packages/0d/81/8088d4d695ff7b93af4b1224448ec3270990c37d4e77bdb454c0078384e7/napari_ome_zarr-0.6.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/22/80/e567070f62c1372aae1042c9d6f8a6fb96b52ec6e16858ab06326cd1a613/ngff_zarr-0.20.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/fc/6a/1000cad1700ab0af4d1b1d0a9c23c34badddb4f547c008bde2a6c61968f1/ome_types-0.6.3-py3-none-any.whl
@@ -1576,7 +1576,7 @@ packages:
 - pypi: ./
   name: biohack-utils
   version: 0.0.1
-  sha256: ceaa8c0166322c70cb8ad94748456f1a6bf7e7d0f0d9f1962b116ff3c3a36092
+  sha256: 8e1f03810c142a9e1ed570b9191c16bfcbfda1934b6d5309cec6fa757f10c14e
   editable: true
 - conda: https://conda.anaconda.org/conda-forge/noarch/bioimageio.core-0.9.5-pyhd8ed1ab_0.conda
   sha256: 6f591e80eaa5a88c204616f3eede7771b99d95d59779be9ac03aea4020385111
@@ -8243,9 +8243,9 @@ packages:
   - vispy
   - napari>=0.4.13
   requires_python: '>=3.7'
-- pypi: git+https://github.com/anwai98/napari-omero?rev=add-collections-pipeline#3aafce4af10a47d512859578593c4a2f075b030c
+- pypi: git+https://github.com/anwai98/napari-omero?rev=add-collections-pipeline#b9d4f018795cd37294c9d64a23390a2ac2d68c0a
   name: napari-omero
-  version: 0.1.dev178+g3aafce4af
+  version: 0.1.dev182+gb9d4f0187
   requires_dist:
   - dask[array]>=2021.10.0
   - napari>=0.5.0

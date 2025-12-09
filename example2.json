@@ -1,0 +1,41 @@
+{
+  "ome": {
+    "version": "0.x",
+    "type": "collection",
+    "name": "nuclei_cell_analysis_1",
+    "nodes": [
+      {
+        "name": "nuclei_raw",
+        "type": "multiscale",
+        "attributes": {
+          "omero:image_id": 51,
+          "category": "intensities",
+          "origin": "raw",
+          "description": "Original nuclei channel"
+        }
+      },
+      {
+        "name": "nuclei_segmentation",
+        "type": "multiscale",
+        "attributes": {
+          "omero:image_id": 54,
+          "category": "annotations",
+          "origin": "masks",
+          "source": "nuclei_raw",
+          "description": "Nuclei segmentation masks"
+        }
+      },
+      {
+        "name": "cell_segmentation",
+        "type": "multiscale",
+        "attributes": {
+          "omero:image_id": 55,
+          "category": "annotations",
+          "origin": "masks",
+          "source": "nuclei_raw",
+          "description": "Cell segmentation masks"
+        }
+      }
+    ]
+  }
+}

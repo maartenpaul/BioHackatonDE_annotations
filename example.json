@@ -1,0 +1,46 @@
+{
+  "ome": {
+    "version": "0.x",
+    "type": "collection",
+    "name": "cell_analysis",
+    "nodes": [
+      {
+        "name": "CovidIF_Cell_Raw",
+        "type": "multiscale",
+        "attributes": {
+          "omero:image_id": 35501,
+          "category": "intensities",
+          "origin": "raw",
+          "description": "Raw cell image from CovidIF dataset"
+        }
+      },
+      {
+        "type": "collection",
+        "name": "nucleus_analysis",
+        "nodes": [
+          {
+            "name": "CovidIF_Nucleus_Raw",
+            "type": "multiscale",
+            "attributes": {
+              "omero:image_id": 35502,
+              "category": "intensities",
+              "origin": "raw",
+              "description": "Raw nucleus image from CovidIF dataset"
+            }
+          },
+          {
+            "name": "nucleus",
+            "type": "multiscale",
+            "attributes": {
+              "omero:image_id": 35503,
+              "category": "annotations",
+              "origin": "masks",
+              "source": "CovidIF_Nucleus_Raw",
+              "description": "Nucleus segmentation from CovidIF dataset"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

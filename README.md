@@ -66,7 +66,7 @@ This repository proposes to adapt the RFC-8 collection model to the specific use
 
 ### Relationships
 
-* One **Reference Image** → many **Label Collections**
+* One **Reference Image** → many **Label Collectios**
 * One **Label Collection** → many **Label Images**
 * Each **Label Image** → exactly one **Reference Image**
 
@@ -87,7 +87,7 @@ Each label image and collection should carry structured metadata, for example:
 
 ## Adapting RFC-8 Collections to OMERO
 
-RFC-8 defines collections as structured containers for grouping related data. For OMERO, the following adaptations are proposed:
+[RFC-8](https://github.com/normanrz/ngff/blob/rfc-8/rfc/8/index.md) defines collections as structured containers for grouping related data. For OMERO, the following adaptations are proposed:
 
 ### 1. Mapping Collections to OMERO Objects
 
@@ -134,6 +134,113 @@ The aim is to move from ad-hoc ROI usage toward a **formal label-image model** w
 
 ---
 
+## Simple schema to help map OME-Zarr style JSON schema to OMERO annotations
+
+
+
+```json
+{
+  "ome": {
+    "version": "0.x",
+    "type": "collection",
+    "name": "nuclei_cell_analysis_1",
+    "nodes": [
+      {
+        "name": "nuclei_raw",
+        "type": "multiscale",
+        "attributes": {
+          "omero:image_id": 51,
+          "category": "intensities",
+          "origin": "raw",
+          "description": "Original nuclei channel"
+        }
+      },
+      {
+        "name": "nuclei_segmentation",
+        "type": "multiscale",
+        "attributes": {
+          "omero:image_id": 54,
+          "category": "annotations",
+          "origin": "masks",
+          "source": "nuclei_raw",
+          "description": "Nuclei segmentation masks"
+        }
+      },
+      {
+        "name": "cell_segmentation",
+        "type": "multiscale",
+        "attributes": {
+          "omero:image_id": 55,
+          "category": "annotations",
+          "origin": "masks",
+          "source": "nuclei_raw",
+          "description": "Cell segmentation masks"
+        }
+      }
+    ]
+  }
+}
+```
+Load JSON using Pydantic model.
+```python
+json_file_path = "example2.json"
+    
+with open(json_file_path) as f:
+    d = json.load(f)
+
+wrapper = OMEWrapper.model_validate(d)
+#flatten the JSON to save to OMERO
+flat = flatten(wrapper)
+pprint.pprint(flat)
+```
+
+```python
+[{'category': 'intensities',
+  'description': 'Original nuclei channel',
+  'name': 'nuclei_raw',
+  'omero:image_id': 51,
+  'origin': 'raw',
+  'path': 'nuclei_raw'},
+ {'category': 'annotations',
+  'description': 'Nuclei segmentation masks',
+  'name': 'nuclei_segmentation',
+  'omero:image_id': 54,
+  'origin': 'masks',
+  'path': 'nuclei_segmentation',
+  'source': 'nuclei_raw'},
+ {'category': 'annotations',
+  'description': 'Cell segmentation masks',
+  'name': 'cell_segmentation',
+  'omero:image_id': 55,
+  'origin': 'masks',
+  'path': 'cell_segmentation',
+  'source': 'nuclei_raw'}]
+```
+
+Upload schema to OMERO:
+
+```python
+coll_id = upload(conn,wrapper)
+```
+
+Fetch as schema from OMERO:
+
+```python
+schema = download(conn, 75)
+```
+
+Export as JSON
+```python
+# 3. Export with Indentation
+file_path = "output_from_omero.json"
+
+with open(file_path, 'w', encoding='utf-8') as f:
+
+    json.dump(data_dict, f, indent=4)
+```
+
+---
+
 ## Repository Scope
 
 This repository currently focuses on:
@@ -158,6 +265,10 @@ This project uses **pixi** for environment and dependency management.
 
 ```bash
 pixi install
+# run commands within the pixi environment
+pixi shell
+# run e.g. napari
+pixi run napari
 ```
 
 ---
