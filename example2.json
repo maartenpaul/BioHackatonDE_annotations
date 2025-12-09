@@ -8,7 +8,7 @@
         "name": "nuclei_raw",
         "type": "multiscale",
         "attributes": {
-          "omero:image_id": 35478,
+          "omero:image_id": 51,
           "category": "intensities",
           "origin": "raw",
           "description": "Original nuclei channel"
@@ -18,7 +18,7 @@
         "name": "nuclei_segmentation",
         "type": "multiscale",
         "attributes": {
-          "omero:image_id": 35485,
+          "omero:image_id": 54,
           "category": "annotations",
           "origin": "masks",
           "source": "nuclei_raw",
@@ -29,7 +29,7 @@
         "name": "cell_segmentation",
         "type": "multiscale",
         "attributes": {
-          "omero:image_id": 35489,
+          "omero:image_id": 55,
           "category": "annotations",
           "origin": "masks",
           "source": "nuclei_raw",

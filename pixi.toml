@@ -12,7 +12,6 @@ python = "3.11.*"
 zeroc-ice = ">=3.6.5,<3.7"
 jupyter = ">=1.1.1,<2"
 micro_sam = ">=1.6.2,<2"
-napari = ">=0.6.6,<0.7"
 
 [pypi-dependencies]
 ngff-zarr = { version = ">=0.20.0, <0.21", extras = ["validate"] }
@@ -26,6 +25,5 @@ matplotlib = ">=3.10.7, <4"
 tifffile = ">=2025.10.16, <2026"
 ome-zarr = ">=0.12.2, <0.13"
 napari-ome-zarr = ">=0.6.1, <0.7"
-napari = { version = "*", extras = ["all"] }
 napari-omero = { git = "https://github.com/anwai98/napari-omero" , rev = "add-collections-pipeline"}
 biohack_utils = { path = ".", editable = true }

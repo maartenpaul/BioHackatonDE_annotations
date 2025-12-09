@@ -18,8 +18,7 @@ def flatten(wrapper: OMEWrapper) -> list[dict]:
             if isinstance(node, CollectionNode):
                 traverse(node.nodes, path)
             else:
-                record = {'name' : node.name}
-                record = {'path': path}
+                record = {'name': node.name, 'path': path}
                 record.update(node.attributes.model_dump(by_alias=True, exclude_none=True))
                 result.append(record)
     
@@ -35,11 +34,11 @@ def unflatten(flat_records: list[dict], name: str, version: str = "0.x") -> OMEW
     for record in sorted(flat_records, key=lambda x: x['path'].count('/')):
         path = record['path']
         parts = path.split('/')
-        node_name = parts[-1]
+        node_name = record.get('name', parts[-1])  # Use 'name' key if available
         parent_path = '/'.join(parts[:-1]) if len(parts) > 1 else None
         
         # Create node
-        attrs = {k: v for k, v in record.items() if k != 'path'}
+        attrs = {k: v for k, v in record.items() if k not in ('path', 'name')}
         node = MultiscaleNode(name=node_name, attributes=NodeAttributes(**attrs))
         
         # Create parent collections if needed

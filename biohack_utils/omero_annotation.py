@@ -290,12 +290,13 @@ def fetch_omero_labels_in_napari(conn, image_id, return_raw=False, label_node_ty
         raise RuntimeError("Image is not part of any collection (namespace NS_COLLECTION).")
 
     labels_dict = {}
-                # hack this to make it compatible with different naming of the kpv
-    if label_node_type=='Labels':
-        label_node_type='annotations'
+# hack this to make it compatible with different naming of the kpv
+    if label_node_type == 'Labels':
+        
+        label_node_type = 'annotations'
 
 
-    # Go through ALL collections this image is in
+# Go through ALL collections this image is in
     for coll in collections:
         coll_id = coll["collection_id"]
         print(f"Processing collection {coll_id} (name={coll.get('name')})")
@@ -307,7 +308,6 @@ def fetch_omero_labels_in_napari(conn, image_id, return_raw=False, label_node_ty
             # Skip the raw image itself
             if mid == image_id:
                 continue
-
             
             # Filter by node type, e.g. "Labels"
             if label_node_type is not None and node_info.get("category") != label_node_type:
