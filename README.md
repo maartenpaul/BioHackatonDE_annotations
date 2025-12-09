@@ -136,8 +136,6 @@ The aim is to move from ad-hoc ROI usage toward a **formal label-image model** w
 
 ## Simple schema to help map OME-Zarr style JSON schema to OMERO annotations
 
-
-
 ```json
 {
   "ome": {
@@ -240,6 +238,11 @@ with open(file_path, 'w', encoding='utf-8') as f:
 ```
 
 ---
+
+## OMERO-napari integration
+A prototype omero-napari tool has been developed that allows to pull label images from a original image using the collection schema.
+
+![image](image.png)
 
 ## Repository Scope
 
